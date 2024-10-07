@@ -1,19 +1,42 @@
+using AppLanches.Services;
+
 namespace AppLanches.Pages;
 
 public partial class LoginPage : ContentPage
 {
-	public LoginPage()
-	{
-		InitializeComponent();
-	}
+    private readonly ApiService _apiService;
 
-    private void BtnSignIn_Clicked(object sender, EventArgs e)
+    public LoginPage(ApiService apiService)
     {
-
+        InitializeComponent();
+        _apiService = apiService;
     }
 
-    private void TapRegister_Tapped(object sender, TappedEventArgs e)
+    private async void BtnSignIn_Clicked(object sender, EventArgs e)
     {
+        if (string.IsNullOrEmpty(EntEmail.Text))
+        {
+            await DisplayAlert("Error", "Enter your Email", "Cancel");
+            return;
+        }
+        if (string.IsNullOrEmpty(EntPassword.Text))
+        {
+            await DisplayAlert("Error", "Enter your Password", "Cancel");
+            return;
+        }
+        var response = await _apiService.Login(EntEmail.Text, EntPassword.Text);
+        if (!response.HasError)
+        {
+            Application.Current!.MainPage = new AppShell();
+        }
+        else
+        {
+            await DisplayAlert("Error", "Something went wrong", "Cancel");
+        }
+    }
 
+    private async void TapRegister_Tapped(object sender, TappedEventArgs e)
+    {
+        await Navigation.PushAsync(new RegisterPage(_apiService));
     }
 }

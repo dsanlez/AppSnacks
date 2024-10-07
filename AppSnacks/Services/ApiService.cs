@@ -24,7 +24,7 @@ public class ApiService
         };
     }
 
-    public async Task<ApiResponse<bool>> RegistrarUsuario(string name, string email,
+    public async Task<ApiResponse<bool>> RegisterUser(string name, string email,
                                                           string phoneNumber, string password)
     {
         try
