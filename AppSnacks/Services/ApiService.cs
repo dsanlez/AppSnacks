@@ -24,30 +24,30 @@ public class ApiService
         };
     }
 
-    public async Task<ApiResponse<bool>> RegistrarUsuario(string nome, string email,
-                                                          string telefone, string password)
+    public async Task<ApiResponse<bool>> RegistrarUsuario(string name, string email,
+                                                          string phoneNumber, string password)
     {
         try
         {
             var register = new Register()
             {
-                Nome = nome,
+                Name = name,
                 Email = email,
-                Telefone = telefone,
-                Senha = password
+                PhoneNumber = phoneNumber,
+                Password = password
             };
 
             var json = JsonSerializer.Serialize(register, _serializerOptions);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var response = await PostRequest("api/Usuarios/Register", content);
+            var response = await PostRequest("api/Users/Register", content);
 
             if (!response.IsSuccessStatusCode)
             {
-                _logger.LogError($"Erro ao enviar requisição HTTP: {response.StatusCode}");
+                _logger.LogError($"Error sending HTTP request: {response.StatusCode}");
                 return new ApiResponse<bool>
                 {
-                    ErrorMessage = $"Erro ao enviar requisição HTTP: {response.StatusCode}"
+                    ErrorMessage = $"Error sending HTTP request: {response.StatusCode}"
                 };
             }
 
@@ -55,7 +55,7 @@ public class ApiService
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Erro ao registrar o usuário: {ex.Message}");
+            _logger.LogError($"Error registering user: {ex.Message}");
             return new ApiResponse<bool> { ErrorMessage = ex.Message };
         }
     }
@@ -66,19 +66,19 @@ public class ApiService
             var login = new Login()
             {
                 Email = email,
-                Senha = password
+                Password = password
             };
 
             var json = JsonSerializer.Serialize(login, _serializerOptions);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var response = await PostRequest("api/Usuarios/Login", content);
+            var response = await PostRequest("api/Users/Login", content);
             if (!response.IsSuccessStatusCode)
             {
-                _logger.LogError($"Erro ao enviar requisição HTTP : {response.StatusCode}");
+                _logger.LogError($"Error sending HTTP request : {response.StatusCode}");
                 return new ApiResponse<bool>
                 {
-                    ErrorMessage = $"Erro ao enviar requisição HTTP : {response.StatusCode}"
+                    ErrorMessage = $"Error sending HTTP request: {response.StatusCode}"
                 };
             }
 
@@ -86,14 +86,14 @@ public class ApiService
             var result = JsonSerializer.Deserialize<Token>(jsonResult, _serializerOptions);
 
             Preferences.Set("accesstoken", result!.AccessToken);
-            Preferences.Set("usuarioid", (int)result.UsuarioId!);
-            Preferences.Set("usuarionome", result.UsuarioNome);
+            Preferences.Set("userId", (int)result.UserId!);
+            Preferences.Set("userName", result.UserName);
 
             return new ApiResponse<bool> { Data = true };
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Erro no login : {ex.Message}");
+            _logger.LogError($"Error on login : {ex.Message}");
             return new ApiResponse<bool> { ErrorMessage = ex.Message };
         }
     }
@@ -108,7 +108,7 @@ public class ApiService
         catch (Exception ex)
         {
             // Log o erro ou trate conforme necessário
-            _logger.LogError($"Erro ao enviar requisição POST para {uri}: {ex.Message}");
+            _logger.LogError($"Error sending HTTP request to {uri}: {ex.Message}");
             return new HttpResponseMessage(HttpStatusCode.BadRequest);
         }
     }

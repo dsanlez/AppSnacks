@@ -11,7 +11,7 @@ public partial class App : Application
     {
         InitializeComponent();
         _apiService = apiService;
-        MainPage = new NavigationPage(new InscricaoPage(_apiService));
+        MainPage = new NavigationPage(new RegisterPage());
       
     }
 }
