@@ -123,6 +123,13 @@ public class ApiService
         string endpoint = $"api/products?Search={productType}&categoryId={categoryId}";
         return await GetAsync<List<Product>>(endpoint);
     }
+
+    public async Task<(Product? ProductDetail, string? ErrorMessage)>GetProductDetail(int productId)
+    {
+        string endpoint = $"api/products/{productId}";
+        return await GetAsync<Product>(endpoint);
+    }
+
     private async Task<(T? Data, string? ErroMessage)> GetAsync<T>(string endpoint)
     {
         try
@@ -175,4 +182,6 @@ public class ApiService
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }
     }
+
+  
 }
