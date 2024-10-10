@@ -16,6 +16,7 @@ public partial class HomePage : ContentPage
         LblUserName.Text = "Hello," + Preferences.Get("username", string.Empty);
         _apiService = apiService ?? throw new ArgumentNullException(nameof(apiService));
         _validator = validator;
+        Title = AppConfig.titleHomePage;
     }
     protected override async void OnAppearing()
     {
@@ -53,6 +54,7 @@ public partial class HomePage : ContentPage
         try
         {
             var (products, errorMessage) = await _apiService.GetProducts("mostsold", string.Empty);
+
             if (errorMessage == "Unauthorized" && !_loginPageDisplayed)
             {
                 await DisplayLoginPage();
@@ -63,6 +65,7 @@ public partial class HomePage : ContentPage
                 await DisplayAlert("Error", errorMessage ?? "Could not fetch the products", "OK");
                 return Enumerable.Empty<Product>();
             }
+
             CvMostSold.ItemsSource = products;
             return products;
         }
@@ -104,7 +107,16 @@ public partial class HomePage : ContentPage
 
     private void CvCategories_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
+        var currentSelection = e.CurrentSelection.FirstOrDefault() as Category;
 
+        if (currentSelection is null) return;
+
+        Navigation.PushAsync(new ProductsListPage(currentSelection.Id,
+                                                  currentSelection.Name!,
+                                                  _apiService,
+                                                  _validator));
+
+        ((CollectionView)sender).SelectedItem = null;
     }
 
     private void CvMostSold_SelectionChanged(object sender, SelectionChangedEventArgs e)
