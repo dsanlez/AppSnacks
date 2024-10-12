@@ -98,6 +98,33 @@ public class ApiService
             return new ApiResponse<bool> { ErrorMessage = ex.Message };
         }
     }
+
+    public async Task<ApiResponse<bool>> AddItemToCart(ShoppingCart cart)
+    {
+        try
+        {
+            var json = JsonSerializer.Serialize(cart, _serializerOptions);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await PostRequest("api/ShoppingCartItems", content);
+            if (!response.IsSuccessStatusCode)
+            {
+                _logger.LogError($"Error sending HTTP request: {response.StatusCode}");
+                return new ApiResponse<bool>
+                {
+                    ErrorMessage = $"Error sending HTTP request: {response.StatusCode}"
+                };
+            }
+            return new ApiResponse<bool> { Data = true };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error adding item to cart: {ex.Message}");
+            return new ApiResponse<bool>
+            {
+                ErrorMessage = ex.Message
+            };
+        }
+    }
     private async Task<HttpResponseMessage> PostRequest(string uri, HttpContent content)
     {
         var enderecoUrl = _baseUrl + uri;

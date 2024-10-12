@@ -8,12 +8,12 @@
                    SelectionMode="Single" 
                     Margin="10"
                     SelectionChanged="CvProducts_SelectionChanged">
-        
-        
+
+
         <CollectionView.ItemsLayout>
-            <GridItemsLayout Orientation="Vertical" Span="12"
-                             HorizontalItemSpacing="15"
-                             VerticalItemSpacing="15"/>
+            <GridItemsLayout Orientation="Vertical" Span="2"
+                             HorizontalItemSpacing="10"
+                             VerticalItemSpacing="10"/>
         </CollectionView.ItemsLayout>
 
         <CollectionView.ItemTemplate>
@@ -24,14 +24,23 @@
 
                     <Grid RowSpacing="5"
                           RowDefinitions="Auto,Auto,Auto">
-                        <Image Source="{Binding ImagePath}"/>
-                        <Label Grid.Row="1" Text="{Binding Name}"/>
-                        <Label Grid.Row="2" Text="{Binding Price, StringFormat='€ {0:F2}'}"/>
+                        <Image 
+                            Aspect="AspectFit"
+                            HeightRequest="150" 
+                            Source="{Binding ImagePath}"/>
+                        <Label Grid.Row="1"
+                            FontAttributes="Bold"
+                            FontSize="Medium" 
+                            LineBreakMode="WordWrap"
+                            MaxLines="2" 
+                            Text="{Binding Name}" />
+                        <Label Grid.Row="2"
+                         FontAttributes="Bold" 
+                         FontSize="Medium"   
+                         Text="{Binding Price,StringFormat='$ {0:F2}'}"/>
                     </Grid>
                 </Border>
-
             </DataTemplate>
         </CollectionView.ItemTemplate>
-        
     </CollectionView>
 </ContentPage>
