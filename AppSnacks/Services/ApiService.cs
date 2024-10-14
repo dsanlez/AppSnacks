@@ -157,6 +157,12 @@ public class ApiService
         return await GetAsync<Product>(endpoint);
     }
 
+    public async Task<(List<ShoppingCartItem>? ShoppingCartItems, string? ErrorMessage)> GetShoppingCartItems(int userId)
+    {
+        var endpoint = $"api/ShoppingCartItems/{userId}";
+        return await GetAsync<List<ShoppingCartItem>>(endpoint);
+    }
+
     private async Task<(T? Data, string? ErroMessage)> GetAsync<T>(string endpoint)
     {
         try
