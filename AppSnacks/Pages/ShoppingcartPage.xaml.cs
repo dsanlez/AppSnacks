@@ -9,16 +9,17 @@ public partial class ShoppingcartPage : ContentPage
 {
     private readonly ApiService _apiService;
     private readonly IValidator _validator;
-
+    private readonly FavoriteService _favoritesService;
     private bool _loginPageDisplayed = false;
     private bool _isNavigatingToEmptyCartPage = false;
     ObservableCollection<ShoppingCartItem> ItemsShoppingCart = new ObservableCollection<ShoppingCartItem>();
 
-    public ShoppingcartPage(ApiService apiService, IValidator validator)
+    public ShoppingcartPage(ApiService apiService, IValidator validator, FavoriteService favoritesService)
     {
         InitializeComponent();
         _apiService = apiService;
         _validator = validator;
+        _favoritesService = favoritesService;
     }
 
     protected override async void OnAppearing()

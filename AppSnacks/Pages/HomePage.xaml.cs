@@ -10,13 +10,15 @@ public partial class HomePage : ContentPage
     private readonly IValidator _validator;
     private bool _loginPageDisplayed = false;
     private bool _isDataLoaded = false;
+    private readonly FavoriteService _favoritesService;
 
-    public HomePage(ApiService apiService, IValidator validator)
+    public HomePage(ApiService apiService, IValidator validator, FavoriteService favoriteService)
 	{
 		InitializeComponent();
         LblUserName.Text = "Hello," + Preferences.Get("username", string.Empty);
         _apiService = apiService ?? throw new ArgumentNullException(nameof(apiService));
         _validator = validator;
+        _favoritesService = favoriteService;
         Title = AppConfig.titleHomePage;
     }
     protected override async void OnAppearing()

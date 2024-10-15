@@ -10,6 +10,8 @@ public partial class ProductDetailsPage : ContentPage
     private readonly IValidator _validator;
     private int _productId;
     private bool _loginPageDisplayed = false;
+    private readonly FavoriteService _favoritesService = new FavoriteService();
+    private string? _imageUrl;
     public ProductDetailsPage(int productId, string productName, ApiService apiService, IValidator validator)
 	{
 		InitializeComponent();
@@ -52,6 +54,7 @@ public partial class ProductDetailsPage : ContentPage
             LblProductPrice.Text = productDetail.Price.ToString();
             LblProductDescription.Text = productDetail.Detail;
             LblTotalPrice.Text = productDetail.Price.ToString();
+            _imageUrl = productDetail.ImagePath;
         }
         else
         {
@@ -67,9 +70,48 @@ public partial class ProductDetailsPage : ContentPage
         await Navigation.PushAsync(new LoginPage(_apiService, _validator));
     }
 
-    private void ImageBtnFavorite_Clicked(object sender, EventArgs e)
+    private async void ImageBtnFavorite_Clicked(object sender, EventArgs e)
     {
+        try
+        {
+            var favoriteExists = await _favoritesService.ReadAsync(_productId);
+            if (favoriteExists is not null)
+            {
+                await _favoritesService.DeleteAsync(favoriteExists);
+            }
+            else
+            {
+                var favoriteProduct = new FavoriteProduct()
+                {
+                    ProductId = _productId,
+                    IsFavorite = true,
+                    Details = LblProductDescription.Text,
+                    Name = LblProductName.Text,
+                    Price = Convert.ToDecimal(LblProductPrice.Text),
+                    ImageUrl = _imageUrl
+                };
+                await _favoritesService.CreateAsync(favoriteProduct);
+            }
+            UpdateFavoritesButton();
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Error", $"There was an unexpected error: {ex.Message}", "OK");
+        }
+    }
 
+    private async void UpdateFavoritesButton()
+    {
+        var favoriteExists = await _favoritesService.ReadAsync(_productId);
+
+        if (favoriteExists is not null)
+        {
+            ImageBtnFavorite.Source = "heartfill";
+        }
+        else
+        {
+            ImageBtnFavorite.Source = "heart";
+        }
     }
 
     private void BtnRemove_Clicked(object sender, EventArgs e)
