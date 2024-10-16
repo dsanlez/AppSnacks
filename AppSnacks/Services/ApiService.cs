@@ -321,5 +321,17 @@ public class ApiService
         }
     }
 
-  
+    public async Task<(List<OrdersByUser>?, string? ErrorMessage)> GetOrdersByUser(int userId)
+    {
+
+        string endpoint = $"api/orders/GetOrdersByUser/{userId}";
+
+        return await GetAsync<List<OrdersByUser>>(endpoint);
+    }
+
+    public async Task<(List<OrderDetail>?, string? ErrorMessage)> GetOrderDetail(int orderId)
+    {
+        string endpoint = $"api/orders/getorderdetails/{orderId}";
+        return await GetAsync<List<OrderDetail>>(endpoint);
+    }
 }
