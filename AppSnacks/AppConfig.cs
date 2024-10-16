@@ -4,5 +4,6 @@
     {
         public static readonly string BaseUrl = "https://8v871vkj-44353.uks1.devtunnels.ms/";
         public static readonly string titleHomePage = "Snacks Mac";
+        public static readonly string StandardImage = "Resources/Images/profile.png";
     }
 }

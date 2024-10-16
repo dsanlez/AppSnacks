@@ -70,6 +70,7 @@
 	  <None Remove="Resources\Images\lanchesico.png" />
 	  <None Remove="Resources\Images\lanchesimg.png" />
 	  <None Remove="Resources\Images\leftarrow.png" />
+	  <None Remove="Resources\Images\logout.png" />
 	  <None Remove="Resources\Images\orders.png" />
 	  <None Remove="Resources\Images\profile.png" />
 	  <None Remove="Resources\Images\profilesettings.png" />

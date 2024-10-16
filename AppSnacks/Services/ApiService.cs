@@ -238,6 +238,36 @@ public class ApiService
         return await GetAsync<List<ShoppingCartItem>>(endpoint);
     }
 
+    public async Task<ApiResponse<bool>> UploadUserImage(byte[] imageArray)
+    {
+        try
+        {
+            var content = new MultipartFormDataContent();
+            content.Add(new ByteArrayContent(imageArray), "image", "image.jpg");
+            var response = await PostRequest("api/users/uploaduserphoto", content);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                string errorMessage = response.StatusCode == HttpStatusCode.Unauthorized
+                    ? "Unauthorized"
+                    : $"Error sending HTTP request: {response.StatusCode}";
+
+                _logger.LogError($"Error sending HTTP request: {response.StatusCode}");
+                return new ApiResponse<bool> { ErrorMessage = errorMessage };
+            }
+            return new ApiResponse<bool> { Data = true };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error uploading user image: {ex.Message}");
+            return new ApiResponse<bool> { ErrorMessage = ex.Message };
+        }
+    }
+    public async Task<(ProfileImage? profileImage, string? ErrorMessage)> GetUserProfileImage()
+    {
+        string endpoint = "api/usuarios/GetUserImage";
+        return await GetAsync<ProfileImage>(endpoint);
+    }
     private async Task<(T? Data, string? ErroMessage)> GetAsync<T>(string endpoint)
     {
         try

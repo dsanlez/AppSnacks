@@ -7,6 +7,7 @@ public partial class LoginPage : ContentPage
 {
     private readonly ApiService _apiService;
     private readonly IValidator _validator;
+    private readonly FavoriteService _favoritesService;
 
     public LoginPage(ApiService apiService, IValidator validator)
     {
@@ -30,7 +31,7 @@ public partial class LoginPage : ContentPage
         var response = await _apiService.Login(EntEmail.Text, EntPassword.Text);
         if (!response.HasError)
         {
-            Application.Current!.MainPage = new AppShell(_apiService, _validator);
+            Application.Current!.MainPage = new AppShell(_apiService, _validator, _favoritesService);
         }
         else
         {
