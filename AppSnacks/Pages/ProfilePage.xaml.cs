@@ -58,7 +58,7 @@ public partial class ProfilePage : ContentPage
 
     private void MyAccount_Tapped(object sender, TappedEventArgs e)
     {
-
+        Navigation.PushAsync(new MyAccoutPage(_apiService));
     }
     
     private void BtnLogout_Clicked(object sender, EventArgs e)
@@ -71,7 +71,7 @@ public partial class ProfilePage : ContentPage
     }
     private void Questions_Tapped(object sender, TappedEventArgs e)
     {
-
+        Navigation.PushAsync(new QuestionsPage());
     }
 
     private async void ImgBtnProfile_Clicked(object sender, EventArgs e)
