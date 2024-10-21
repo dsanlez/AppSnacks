@@ -9,12 +9,12 @@ public partial class FavoritesPage : ContentPage
     private readonly ApiService _apiService;
     private readonly IValidator _validator;
     private readonly FavoriteService _favoritesService;
-    public FavoritesPage(ApiService apiService, IValidator validator, FavoriteService favoriteService)
+    public FavoritesPage(ApiService apiService, IValidator validator)
 	{
 		InitializeComponent();
         _apiService = apiService;
         _validator = validator;
-        _favoritesService = favoriteService;
+        _favoritesService = ServiceFactory.CreateFavoriteService();
     }
 
     protected override async void OnAppearing()

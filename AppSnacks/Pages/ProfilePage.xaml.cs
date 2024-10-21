@@ -63,7 +63,8 @@ public partial class ProfilePage : ContentPage
     
     private void BtnLogout_Clicked(object sender, EventArgs e)
     {
-
+        Preferences.Set("acesstoken", string.Empty);
+        Application.Current!.MainPage = new NavigationPage(new LoginPage(_apiService, _validator));
     }
     private void TapRequests_Tapped(object sender, TappedEventArgs e)
     {

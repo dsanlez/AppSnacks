@@ -12,8 +12,8 @@ public partial class OrdersPage : ContentPage
     private bool _loginPageDisplayed = false;
 
     public OrdersPage(ApiService apiService, IValidator validator)
-	{
-		InitializeComponent();
+    {
+        InitializeComponent();
         _apiService = apiService;
         _validator = validator;
     }
@@ -24,39 +24,44 @@ public partial class OrdersPage : ContentPage
         await GetOrderList();
     }
 
-    
-        private async Task GetOrderList()
-        {
-            try
-            {
-                var (orders, errorMessage) = await _apiService.GetOrdersByUser(Preferences.Get("userid", 0));
 
-                if (errorMessage == "Unauthorized" && !_loginPageDisplayed)
-                {
-                    await DisplayLoginPage();
-                    return;
-                }
-                if (errorMessage == "NotFound")
-                {
-                    await DisplayAlert("Warning", "There are no orders for the customer.", "OK");
-                    return;
-                }
-                if (orders is null)
-                {
-                    await DisplayAlert("Error", errorMessage ?? "Unable to retrieve orders.", "OK");
-                    return;
-                }
-                else
-                {
-                    CvOrders.ItemsSource = orders;
-                }
-            }
-            catch (Exception)
+    private async Task GetOrderList()
+    {
+        try
+        {
+            loadOrdersIndicator.IsRunning = true;
+            loadOrdersIndicator.IsVisible = true;
+
+            var (orders, errorMessage) = await _apiService.GetOrdersByUser(Preferences.Get("userid", 0));
+
+            if (errorMessage == "Unauthorized" && !_loginPageDisplayed)
             {
-                await DisplayAlert("Error", "An error occurred while retrieving the orders. Please try again later.", "OK");
+                await DisplayLoginPage();
+                return;
+            }
+            if (errorMessage == "NotFound")
+            {
+                await DisplayAlert("Warning", "There are no orders for the customer.", "OK");
+                return;
+            }
+            if (orders is null)
+            {
+                await DisplayAlert("Error", errorMessage ?? "Unable to retrieve orders.", "OK");
+                return;
+            }
+            else
+            {
+                CvOrders.ItemsSource = orders;
             }
         }
-    
+        catch (Exception)
+        {
+            await DisplayAlert("Error", "An error occurred while retrieving the orders. Please try again later.", "OK");
+        }
+        loadOrdersIndicator.IsRunning = false;
+        loadOrdersIndicator.IsVisible = false;
+    }
+
 
     private void CvOrders_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
